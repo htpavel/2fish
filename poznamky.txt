@@ -1,0 +1,2 @@
+1. instalace express
+    a. stránky https://expressjs.com/
