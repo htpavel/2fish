@@ -1,2 +1,5 @@
 1. instalace express
-    a. stránky https://expressjs.com/
+    a. www stránky https://expressjs.com/
+    b. možno vytvořit automatickou strukturu příkazem: $ npx express-generator
+        -> strukturu zatím používat nebudu
+2. instalace react
