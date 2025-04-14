@@ -5,4 +5,4 @@
     c. instalovat do serveru
 2. instalace react
     a. www stránky https://react.dev/
-    b. instalovat do clienta
+    b. instalovat do klienta
