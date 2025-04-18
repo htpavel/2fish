@@ -6,7 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const catchFolderPath = path.join("server", "data", "catchData"); //adresář pro ukládání záznamů
+const catchFolderPath = path.join("server", "data", "catchData"); //adresář pro ukládání záznamů druhů ryb
+const speciesFolderPath = path.join("server", "data", "speciesData"); //adresář pro ukládání záznamů úlovků
 
 const Ajv = require("ajv");// modul pro kontrolu formátu Json
 const addFormats = require("ajv-formats").default; // přidává kontrolu formátů
@@ -20,7 +21,7 @@ const schema = {
         districtNr: { type: "number" },
         weight: { type: "number" },
         length: { type: "number" },
-        speciesId: { type: "string" },
+        speciesId: { type: "string", minLength: 32, maxLength: 32 },
     },
     additionalProperties: false,
 };
@@ -41,55 +42,45 @@ async function CreateCatch(req, res) {
             return;
         }
 
-        //zkontroluj datum
-        if (new Date(fish.date) >= new Date()) {
+        //zkontroluj, jestli existuje ID 
+        const sfPath = path.join(speciesFolderPath, fish.speciesId)
+        
+        if (!FileExists(sfPath)) {
             res.status(400).json({
-                code: "invalidDate",
-                message: "date must be current day or a day in the past",
-                validationError: ajv.errors,
+              code: "CatchIdDoesNotExist",
+              message: `catch with id ${fish.speciesId} does not exist`,
+              validationError: ajv.errors,
             });
             return;
-        }
-
-        /*    //zkontroluj jestli existuje druh ryby
-            const category = categoryDao.get(fish.categoryId);
-    
-            if (!category) {
-                res.status(400).json({
-                  code: "categoryDoesNotExist",
-                  message: `category with id ${fish.categoryId} does not exist`,
-                  validationError: ajv.errors,
-                });
-                return; 
-            }*/
+          }
 
         //Vytvoří a uloží soubor
-        Create(fish);
-        
-        //odpověď serveru
+        Create(fish, res);
         res.json(fish);
+
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 
 /**
  * Funkce vytvoří soubor do adresáře "catchData" a uloží do něj záznam ve formátu JSON
  * @param {object} fish 
- * @returns fish 
+ * @returns {string} Json data
  */
-function Create(fish) {
+function Create(fish, res) {
     try {
         let ID;
         let filePath;
-        
+
         do {
-        ID = crypto.randomBytes(16).toString("hex"); //vygeneruje ID záznamu
-        filePath = path.join(catchFolderPath, ID);
+            ID = crypto.randomBytes(16).toString("hex"); //vygeneruje ID záznamu
+            filePath = path.join(catchFolderPath, ID);
         }
-        while (FileExists(filePath));
+        while (FileExists(filePath)); //ověří, jestli neexistuje stejný ID záznamu úlovku
         fish["id"] = ID; // přidá ID hodnotu do záznamu - není nutné, protože je hodnota uložena i v názvu
         const data = JSON.stringify(fish);
         fs.writeFileSync(filePath, data, "utf8");
@@ -99,6 +90,7 @@ function Create(fish) {
     catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 
@@ -106,18 +98,18 @@ function Create(fish) {
  * Funkce ověří, jestli se nenachází stejné ID záznamu.
  * Ověřují se názvy souborů, kde je uloženo ID
  * @param {string} filePath 
- * @returns bool
+ * @returns {bool}
  */
 function FileExists(filePath) {
     try {
         if (fs.existsSync(filePath)) {
-           return true;
+            return true;
         } else {
             return false;
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 

@@ -39,8 +39,8 @@ async function GetSp(req, res) {
         const sp = getSpecies(species.id);
         if (!sp) {
             res.status(404).json({
-                code: "categoryNotFound",
-                category: `Category with id ${reqParams.id} not found`,
+                code: "speciesNotFound",
+                category: `Species with id ${reqParams.id} not found`,
             });
             return;
         }
@@ -54,7 +54,7 @@ async function GetSp(req, res) {
 }
 
 /**
- * 
+ * Funkce přečte data ze souboru podle ID
  * @param {string} ID 
  * @returns {string} druh ryby
  */
@@ -65,7 +65,7 @@ function getSpecies(ID) {
         return JSON.parse(fileData);
     } catch (error) {
         if (error.code === "ENOENT") return null;
-        throw { code: "failedToReadCategory", category: error.category };
+        throw error;
     }
 }
 module.exports = GetSp;

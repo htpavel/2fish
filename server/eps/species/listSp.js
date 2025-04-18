@@ -10,49 +10,29 @@ const addFormats = require("ajv-formats").default; // přidává kontrolu formá
 const ajv = new Ajv();
 addFormats(ajv);
 
-const schema = {
-    type: "object",
-    properties: {
-        date: { type: "string" },
-    },
-    required: [],
-    additionalProperties: false,
-};
-
 async function ListSp(req, res) {
 
-    try {
-        const species = req.body;
-
-        //validuj vstup
-        const valid = ajv.validate(schema, species);
-        if (!valid) {
-            res.status(400).json({
-                code: "dtoInIsNotValid",
-                message: "dtoIn is not valid",
-                validationError: ajv.errors,
-            });
-            return;
-        }
-        const listSP = GetList();
-        res.json({listSP});
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const species = req.body;
+    const listSP = GetList();
+    res.json({ listSP });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
 }
 
 
 /**
  * Vrátí seznam všech druhů ryb
- * @returns {string} Json
+ * @returns {string} JSON
  */
 function GetList() {
   try {
     const files = fs.readdirSync(speciesFolderPath);
     const allData = [];
-       for (const file of files) {
+    for (const file of files) {
       const fullPath = path.join(speciesFolderPath, file);
       const fileContent = fs.readFileSync(fullPath, 'utf-8');
       try {
@@ -60,9 +40,11 @@ function GetList() {
         allData.push(jsonData);
       } catch (error) {
         console.error("Error reading file ${file}:", error);
+        res.status(500).json({ message: error.message });
+        throw error;
       }
     }
-  
+
     return JSON.parse(JSON.stringify(allData));
 
   } catch (error) {

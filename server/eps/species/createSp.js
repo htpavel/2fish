@@ -40,25 +40,26 @@ async function CreateSp(req, res) {
 
         //ověří jestli neexistuje stejný druh
         NameExists(species.name);
-        
+
         //Vytvoří a uloží soubor
-        Create(species);
-      
-       //odpověď serveru
+        Create(species, res);
+
+        //odpověď serveru
         res.json(species);
     }
     catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 
 /**
  * Funkce vytvoří soubor do adresáře "speciesData" a uloží do něj záznam ve formátu JSON
  * @param {object} species 
- * @returns species
+ * @returns {string} JSON 
  */
-function Create(species) {
+function Create(species, res) {
     try {
         let ID;
         let filePath;
@@ -77,6 +78,7 @@ function Create(species) {
     catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 
@@ -84,7 +86,7 @@ function Create(species) {
  * Funkce ověří, jestli se nenachází stejné ID záznamu.
  * Ověřují se názvy souborů, kde je uloženo ID
  * @param {string} filePath 
- * @returns bool
+ * @returns {bool}
  */
 function FileExists(filePath) {
     try {
@@ -115,7 +117,7 @@ function NameExists(name) {
                     throw {
                         code: "uniqueNameAlreadyExists",
                         message: "exists category with given name",
-                      };
+                    };
                 }
 
             });
@@ -123,7 +125,7 @@ function NameExists(name) {
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message });
+        throw error;
     }
 }
 module.exports = CreateSp;
