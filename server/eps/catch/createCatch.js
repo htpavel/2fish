@@ -1,22 +1,12 @@
 /**
- * Uloží záznam do souboru ve formátu Json.
+ * Uloží záznam úlovku do souboru ve formátu Json.
  */
 
-
-/*pro insomnii
-{
-	"date": "2025-01-20",
-	"districtNr": 10,
-    "weight": 10,
-	"length": 10,
-	"speciesId": "ijjf23132"
-}
-*/
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const catchFolderPath = path.join("server","data", "catchData"); //adresář pro ukládání záznamů
+const catchFolderPath = path.join("server", "data", "catchData"); //adresář pro ukládání záznamů
 
 const Ajv = require("ajv");// modul pro kontrolu formátu Json
 const addFormats = require("ajv-formats").default; // přidává kontrolu formátů
@@ -35,11 +25,10 @@ const schema = {
     additionalProperties: false,
 };
 
-
 async function CreateCatch(req, res) {
 
     try {
-        let fish = req.body;
+        const fish = req.body;
 
         //validuj vstup
         const valid = ajv.validate(schema, fish);
@@ -74,9 +63,11 @@ async function CreateCatch(req, res) {
                 return; 
             }*/
 
-        //uloží soubor
-          create(fish);
-          res.send(fish);
+        //Vytvoří a uloží soubor
+        Create(fish);
+        
+        //odpověď serveru
+        res.json(fish);
     }
     catch (error) {
         console.error(error);
@@ -84,27 +75,32 @@ async function CreateCatch(req, res) {
     }
 }
 
-
 /**
- * Funkce vytvoří soubor do adresáře "data" a uloží do něj záznam ve formátu JSON
+ * Funkce vytvoří soubor do adresáře "catchData" a uloží do něj záznam ve formátu JSON
  * @param {object} fish 
  * @returns fish 
  */
-function create(fish) {
+function Create(fish) {
     try {
-        const ID = crypto.randomBytes(16).toString("hex"); //vygeneruje ID záznamu
+        let ID;
+        let filePath;
+        
+        do {
+        ID = crypto.randomBytes(16).toString("hex"); //vygeneruje ID záznamu
+        filePath = path.join(catchFolderPath, ID);
+        }
+        while (FileExists(filePath));
         fish["id"] = ID; // přidá ID hodnotu do záznamu - není nutné, protože je hodnota uložena i v názvu
-        const data = JSON.stringify(fish); 
-        const filePath = path.join(catchFolderPath ,ID);
+        const data = JSON.stringify(fish);
         fs.writeFileSync(filePath, data, "utf8");
+
         return fish;
     }
     catch (error) {
-        
-        throw  error.message;
+        console.error(error);
+        res.status(500).json({ message: error.message });
     }
 }
-
 
 /**
  * Funkce ověří, jestli se nenachází stejné ID záznamu.
@@ -112,14 +108,16 @@ function create(fish) {
  * @param {string} filePath 
  * @returns bool
  */
-function checkID(filePath) {
+function FileExists(filePath) {
     try {
-    const filePath = path.join(categoryFolderPath, `${categoryId}.json`);
-        const fileData = fs.readFileSync(filePath, "utf8");
-        return JSON.parse(fileData);
+        if (fs.existsSync(filePath)) {
+           return true;
+        } else {
+            return false;
+        }
     } catch (error) {
-        if (error.code === "ENOENT") return null;
-        throw { code: "failedToReadCategory", category: error.category };
+        console.error(error);
+        res.status(500).json({ message: error.message });
     }
 }
 

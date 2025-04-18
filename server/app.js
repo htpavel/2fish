@@ -3,7 +3,7 @@ const app = express();
 const port = 3333;
 
 const catchController = require("./controller/catch"); //controller pro úlovky
-//const speciesController = require("./controller/species"); //controler pro druhy ryb
+const speciesController = require("./controller/species"); //controler pro druhy ryb
 
 app.use(express.json()); // podpora pro application/json
 app.use(express.urlencoded({ extended: true })); // podpora pro application/x-www-form-urlencoded
@@ -14,8 +14,8 @@ app.get('/', (req, res) => {
 })
 
 app.use("/catch", catchController);
-//app.use("/species", speciesController);
+app.use("/species", speciesController);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`2FISH server listening on port ${port}`);
 })
