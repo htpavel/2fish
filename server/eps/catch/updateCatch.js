@@ -81,7 +81,7 @@ async function UpdateCatch(req, res) {
 /**
  * Funkce aktualizuje název druhu ryby podle ID
  * @param {object} species druh ryby
- * @param {string} JSON
+ * @param {object} JSON
  */
 function Update(fish) {
     filePath = path.join(catchFolderPath, fish.id);

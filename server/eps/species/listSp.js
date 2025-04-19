@@ -26,7 +26,7 @@ async function ListSp(req, res) {
 
 /**
  * Vrátí seznam všech druhů ryb
- * @returns {string} JSON
+ * @returns {object} JSON
  */
 function GetList() {
   try {

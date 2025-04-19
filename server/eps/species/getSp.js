@@ -56,7 +56,7 @@ async function GetSp(req, res) {
 /**
  * Funkce přečte data ze souboru podle ID
  * @param {string} ID 
- * @returns {string} druh ryby
+ * @returns {Object} JSON
  */
 function getSpecies(ID) {
     try {

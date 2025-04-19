@@ -61,7 +61,7 @@ async function UpdateSp(req, res) {
 /**
  * Funkce aktualizuje název druhu ryby podle ID
  * @param {object} species druh ryby
- * @param {string} JSON
+ * @param {object} JSON
  */
 function Update(species) {
     filePath = path.join(speciesFolderPath, species.id);

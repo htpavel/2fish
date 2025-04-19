@@ -69,7 +69,7 @@ async function CreateCatch(req, res) {
 /**
  * Funkce vytvoří soubor do adresáře "catchData" a uloží do něj záznam ve formátu JSON
  * @param {object} fish 
- * @returns {string} Json data
+ * @returns {object} Json data
  */
 function Create(fish, res) {
     try {

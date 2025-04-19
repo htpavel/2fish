@@ -67,7 +67,7 @@ async function ListCatch(req, res) {
 
 /**
  * Vrátí seznam všech ryb
- * @returns {string} JSON
+ * @returns {object} JSON
  */
 function GetList() {
     try {
@@ -96,7 +96,7 @@ function GetList() {
 
 /**
  * Vrátí seznam ryb filtrovaný podle druhů
- * @returns {string} JSON
+ * @returns {object} JSON
  */
 function GetFilteredList(idSpecies) {
     try {

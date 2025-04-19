@@ -57,7 +57,7 @@ async function CreateSp(req, res) {
 /**
  * Funkce vytvoří soubor do adresáře "speciesData" a uloží do něj záznam ve formátu JSON
  * @param {object} species 
- * @returns {string} JSON 
+ * @returns {object} JSON 
  */
 function Create(species, res) {
     try {

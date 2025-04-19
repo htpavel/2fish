@@ -60,7 +60,7 @@ async function GetCatch(req, res) {
 /**
  * Funkce přečte data ze souboru podle ID
  * @param {string} ID 
- * @returns {string} druh ryby
+ * @returns {object} JSON
  */
 function getFish(ID) {
     try {
