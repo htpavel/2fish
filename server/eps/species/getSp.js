@@ -54,13 +54,13 @@ async function GetSp(req, res) {
 }
 
 /**
- * Funkce přečte data ze souboru podle ID
- * @param {string} ID 
+ * Funkce přečte data ze souboru podle ID - DAO
+ * @param {string} speciesID 
  * @returns {Object} JSON
  */
-function getSpecies(ID) {
+function getSpecies(speciesID) {
     try {
-        const filePath = path.join(speciesFolderPath, ID);
+        const filePath = path.join(speciesFolderPath, speciesID);
         const fileData = fs.readFileSync(filePath, "utf8");
         return JSON.parse(fileData);
     } catch (error) {

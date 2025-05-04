@@ -25,7 +25,7 @@ async function ListSp(req, res) {
 
 
 /**
- * Vrátí seznam všech druhů ryb
+ * Vrátí seznam všech druhů ryb - Ado
  * @returns {object} JSON
  */
 function GetList() {

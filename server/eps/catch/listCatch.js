@@ -66,7 +66,7 @@ async function ListCatch(req, res) {
 }
 
 /**
- * Vrátí seznam všech ryb
+ * Vrátí seznam všech ryb - DAO
  * @returns {object} JSON
  */
 function GetList() {
@@ -78,6 +78,7 @@ function GetList() {
             const fileContent = fs.readFileSync(fullPath, 'utf-8');
             try {
                 const jsonData = JSON.parse(fileContent);
+                jsonData.name = getSpecies(jsonData.speciesId); // přidá podle ID název druhu ryby
                 allData.push(jsonData);
             } catch (error) {
                 console.error("Error reading file ${file}:", error);
@@ -95,7 +96,7 @@ function GetList() {
 }
 
 /**
- * Vrátí seznam ryb filtrovaný podle druhů
+ * Vrátí seznam ryb filtrovaný podle druhů - DAO
  * @returns {object} JSON
  */
 function GetFilteredList(idSpecies) {
@@ -107,6 +108,7 @@ function GetFilteredList(idSpecies) {
             const fileContent = fs.readFileSync(fullPath, 'utf-8');
             try {
                 const jsonData = JSON.parse(fileContent);
+                jsonData.name = getSpecies(jsonData.speciesId); // přidá podle ID název druhu ryby
 
                 if (String(jsonData.speciesId) === idSpecies) {
                     allData.push(jsonData);
@@ -122,6 +124,24 @@ function GetFilteredList(idSpecies) {
 
     } catch (error) {
         console.error("Error reading directory:", error);
+        throw error;
+    }
+}
+
+/**
+ * Funkce přečte data ze souboru podle ID a vrátí název
+ * @param {string} speciesID 
+ * @returns {string} name
+ */
+function getSpecies(speciesID) {
+    try {
+        const filePath = path.join(speciesFolderPath, speciesID);
+        const fileData = fs.readFileSync(filePath, "utf8");
+        const data = JSON.parse(fileData);
+        return data.name;
+
+    } catch (error) {
+        if (error.code === "ENOENT") return null;
         throw error;
     }
 }

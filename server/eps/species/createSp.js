@@ -22,7 +22,7 @@ const schema = {
     additionalProperties: false,
 };
 
-async function CreateSp(req, res) {
+async function CreateSp(req) {
 
     try {
         const species = req.body;
@@ -55,11 +55,11 @@ async function CreateSp(req, res) {
 }
 
 /**
- * Funkce vytvoří soubor do adresáře "speciesData" a uloží do něj záznam ve formátu JSON
+ * Funkce vytvoří soubor do adresáře "speciesData" a uloží do něj záznam ve formátu JSON - DAO
  * @param {object} species 
  * @returns {object} JSON 
  */
-function Create(species, res) {
+function Create(species) {
     try {
         let ID;
         let filePath;
@@ -77,7 +77,6 @@ function Create(species, res) {
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message });
         throw error;
     }
 }

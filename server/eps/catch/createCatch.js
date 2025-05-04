@@ -55,7 +55,7 @@ async function CreateCatch(req, res) {
           }
 
         //Vytvoří a uloží soubor
-        Create(fish, res);
+        Create(fish);
         res.json(fish);
 
     }
@@ -67,11 +67,11 @@ async function CreateCatch(req, res) {
 }
 
 /**
- * Funkce vytvoří soubor do adresáře "catchData" a uloží do něj záznam ve formátu JSON
+ * Funkce vytvoří soubor do adresáře "catchData" a uloží do něj záznam ve formátu JSON - DAO
  * @param {object} fish 
  * @returns {object} Json data
  */
-function Create(fish, res) {
+function Create(fish) {
     try {
         let ID;
         let filePath;
@@ -89,7 +89,6 @@ function Create(fish, res) {
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ message: error.message });
         throw error;
     }
 }

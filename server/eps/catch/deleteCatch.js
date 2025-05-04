@@ -47,7 +47,7 @@ async function DeleteCatch(req, res) {
         }
 
         //smaže soubor
-        DelCatch(fish.id);
+        Delete(fish.id);
         //odpověď serveru
         res.json({});
     }
@@ -59,11 +59,11 @@ async function DeleteCatch(req, res) {
 }
 
 /**
- * Funkce smaže soubor podle ID
+ * Funkce smaže soubor podle ID - DAO
  * @param {*} ID  ID záznamu
  * @returns {}
  */
-function DelCatch(ID) {
+function Delete(ID) {
     try {
         filePath = path.join(catchFolderPath, ID);
         fs.unlinkSync(filePath);

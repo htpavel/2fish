@@ -79,7 +79,7 @@ async function UpdateCatch(req, res) {
 }
 
 /**
- * Funkce aktualizuje název druhu ryby podle ID
+ * Funkce aktualizuje název druhu ryby podle ID - DAO
  * @param {object} species druh ryby
  * @param {object} JSON
  */

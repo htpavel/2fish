@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const catchFolderPath = path.join("server", "data", "catchData"); //adresář pro ukládání záznamů druhů ryb
+const speciesFolderPath = path.join("server", "data", "speciesData"); //adresář pro ukládání záznamů úlovků
 
 
 const Ajv = require("ajv");// modul pro kontrolu formátu Json
@@ -47,7 +48,7 @@ async function GetCatch(req, res) {
         }
 
 
-        const fi = getFish(fish.id, res);
+        const fi = GetFish(fish.id);
         res.json({ fi });
 
     }
@@ -58,15 +59,36 @@ async function GetCatch(req, res) {
 }
 
 /**
- * Funkce přečte data ze souboru podle ID
- * @param {string} ID 
+ * Funkce přečte data ze souboru podle ID - DAO
+ * @param {string} catchId 
  * @returns {object} JSON
  */
-function getFish(ID) {
+function GetFish(catchId) {
     try {
-        const filePath = path.join(catchFolderPath, ID);
+        const filePath = path.join(catchFolderPath, catchId);
         const fileData = fs.readFileSync(filePath, "utf8");
-        return JSON.parse(fileData);
+        const data = JSON.parse(fileData);
+        data.name = getSpecies(data.speciesId); // přidá podle ID název druhu ryby
+        return data;
+    } catch (error) {
+        if (error.code === "ENOENT") return null;
+        throw error;
+    }
+}
+
+
+/**
+ * Funkce přečte data ze souboru podle ID a vrátí název
+ * @param {string} speciesID 
+ * @returns {string} name
+ */
+function getSpecies(speciesID) {
+    try {
+        const filePath = path.join(speciesFolderPath, speciesID);
+        const fileData = fs.readFileSync(filePath, "utf8");
+        const data = JSON.parse(fileData);
+        return data.name;
+
     } catch (error) {
         if (error.code === "ENOENT") return null;
         throw error;

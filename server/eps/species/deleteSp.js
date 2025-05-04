@@ -51,7 +51,7 @@ async function DeleteSp(req, res) {
 
 
         //smaže soubor
-        DelSpecies(species.id);
+        Delete(species.id);
         //odpověď serveru
         res.json({});
     }
@@ -63,11 +63,11 @@ async function DeleteSp(req, res) {
 }
 
 /**
- * Funkce smaže soubor podle ID
+ * Funkce smaže soubor podle ID - DAO
  * @param {*} ID  ID záznamu
  * @returns {}
  */
-function DelSpecies(ID) {
+function Delete(ID) {
     try {
         filePath = path.join(speciesFolderPath, ID);
         fs.unlinkSync(filePath);
