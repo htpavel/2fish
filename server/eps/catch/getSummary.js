@@ -19,14 +19,12 @@ async function GetSummary(req, res) {
 
     if (!FileExists(catchFolderPath)) {
         res.status(400).json({
-            code: "CatchIdDoesNotExist",
-            message: `Catch with id ${fish.id} does not exist`,
+            code: "catchIdDoesNotExist",
+            message: `catch with id ${fish.id} does not exist`,
             validationError: ajv.errors,
         });
         return;
     }
-
-
     const summary = GetSum();
     res.json({ summary });
 }
@@ -40,19 +38,43 @@ function GetSum() {
     try {
         const files = fs.readdirSync(catchFolderPath);
         const allData = [];
+        var totalWeight = 0; //celková váha ryb
+        var totalLength = 0; //celková délka ryb
+        const fishWeights = {}; // objekt pro ukládání celkové váhy pro každý druh ryby
+        const fishLengths = {}; // objekt pro ukládání celkové délky pro každý druh ryby
         for (const file of files) {
             const fullPath = path.join(catchFolderPath, file);
             const fileContent = fs.readFileSync(fullPath, 'utf-8');
             try {
                 const jsonData = JSON.parse(fileContent);
-                jsonData.name = getSpecies(jsonData.speciesId); // přidá podle ID název druhu ryby
-                allData.push(jsonData);
+                totalWeight += jsonData.weight;
+                totalLength += jsonData.length;
+
+                const speciesName = getSpecies(jsonData.speciesId);
+                // Sčítáme váhu pro daný druh ryby
+                if (fishWeights[speciesName]) {
+                    fishWeights[speciesName] += jsonData.weight;
+                } else {
+                    fishWeights[speciesName] = jsonData.weight;
+                }
+
+                // Sčítáme délku pro daný druh ryby
+                if (fishLengths[speciesName]) {
+                    fishLengths[speciesName] += jsonData.length;
+                } else {
+                    fishLengths[speciesName] = jsonData.length;
+                }
+
             } catch (error) {
                 console.error("Error reading file ${file}:", error);
                 res.status(500).json({ message: error.message });
                 throw error;
             }
         }
+        allData.push({ totalWeight: totalWeight });
+        allData.push({ totalLength: totalLength });
+        allData.push({ totalWeightBySpecies: fishWeights });
+        allData.push({ totalLengthBySpecies: fishLengths });
 
         return JSON.parse(JSON.stringify(allData));
 

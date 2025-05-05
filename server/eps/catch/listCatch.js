@@ -22,8 +22,6 @@ const schema = {
     additionalProperties: false,
 };
 
-
-
 async function ListCatch(req, res) {
     try {
         const fish = req.body;
@@ -46,8 +44,8 @@ async function ListCatch(req, res) {
 
             if (!FileExists(sfPath)) {
                 res.status(400).json({
-                    code: "CatchIdDoesNotExist",
-                    message: `Chatch with id ${fish.speciesId} does not exist`,
+                    code: "catchIdDoesNotExist",
+                    message: `catch with id ${fish.speciesId} does not exist`,
                     validationError: ajv.errors,
                 });
                 return;
@@ -55,7 +53,7 @@ async function ListCatch(req, res) {
             listFish = GetFilteredList(fish.speciesId); //filtrovaný seznam
         }
         else {
-            listFish = GetList(); //nefiltrovaný seznam
+            listFish = List(); //nefiltrovaný seznam
         }
         res.json({ listFish });
     }
@@ -69,7 +67,7 @@ async function ListCatch(req, res) {
  * Vrátí seznam všech ryb - DAO
  * @returns {object} JSON
  */
-function GetList() {
+function List() {
     try {
         const files = fs.readdirSync(catchFolderPath);
         const allData = [];

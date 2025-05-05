@@ -18,9 +18,9 @@ const schema = {
     type: "object",
     properties: {
         date: { type: "string", format: "date" }, //formát je kontrolován pomocí modulu ajv-formats
-        districtNr: { type: "number" },
-        weight: { type: "number" },
-        length: { type: "number" },
+        districtNr: { type: "number", minimum: 100000, maximum: 999999 },
+        weight: { type: "number", minimum: 1 },
+        length: { type: "number", minimum: 1 },
         speciesId: { type: "string", minLength: 32, maxLength: 32 },
     },
     additionalProperties: false,
@@ -42,17 +42,26 @@ async function CreateCatch(req, res) {
             return;
         }
 
-        //zkontroluj, jestli existuje ID 
-        const sfPath = path.join(speciesFolderPath, fish.speciesId)
-        
-        if (!FileExists(sfPath)) {
+        // validuj datum
+        if (new Date(fish.date) >= new Date()) {
             res.status(400).json({
-              code: "CatchIdDoesNotExist",
-              message: `catch with id ${fish.speciesId} does not exist`,
-              validationError: ajv.errors,
+                code: "invalidDate",
+                message: `date must be current day or a day in the past`,
+                validationError: ajv.errors,
             });
             return;
-          }
+        }
+        //zkontroluj, jestli existuje ID 
+        const sfPath = path.join(speciesFolderPath, fish.speciesId)
+
+        if (!FileExists(sfPath)) {
+            res.status(400).json({
+                code: "catchIdDoesNotExist",
+                message: `catch with id ${fish.speciesId} does not exist`,
+                validationError: ajv.errors,
+            });
+            return;
+        }
 
         //Vytvoří a uloží soubor
         Create(fish);
