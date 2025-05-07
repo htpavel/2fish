@@ -1,0 +1,10 @@
+Serverová část
+1. instalace express
+    a. www stránky https://expressjs.com/
+    b. možno vytvořit automatickou strukturu příkazem: $ npx express-generator
+        -> strukturu zatím používat nebudu
+    c. instalovat do serveru
+2. instalace react
+    a. www stránky https://react.dev/
+    b. instalovat do klienta
+3. založit GitHub
