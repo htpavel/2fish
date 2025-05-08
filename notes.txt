@@ -8,3 +8,5 @@ Serverová část
     a. www stránky https://react.dev/
     b. instalovat do klienta
 3. založit GitHub
+4. nastartovat server pro 
+5. nastartovat react...vlézt do složky ../client -> příkaz npm start

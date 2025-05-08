@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+// komponenta je obyčejná funkce
+// komponenta má stejný název jako je název souboru
+// komponenta obsahuje return
+// na konci souboru musí být řádek s exportem
+// v return musí něco být
+// return dokáže vrátit pouze jeden tag (musí se obalit-např.<div>....</div> nebo použít mrtvé závorky <>...</> vyhneme se pak vnořeným "divům")
 
-function App() {
+import './App.css';
+import AddCatchButton from './components/AddCatchButton';
+import SummaryButton from './components/SummaryButton';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+        <div>
+          <AddCatchButton></AddCatchButton>
+          <SummaryButton></SummaryButton>
+        </div>
+  )
 }
 
 export default App;
