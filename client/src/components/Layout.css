@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.layout-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: lavender;
+  height: 40px;
+  border: solid;
+  border-top-width: 1px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  text-align: center;
+  border-color: rgb(80, 25, 105);
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.layout-appname {
+  width: 50em;
+  
+}
+.layout-menu{
+}
+
+.layout-dashboard {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 500px;
+}

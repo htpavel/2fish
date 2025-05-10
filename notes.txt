@@ -8,5 +8,12 @@ Serverová část
     a. www stránky https://react.dev/
     b. instalovat do klienta
 3. založit GitHub
-4. nastartovat server pro 
-5. nastartovat react...vlézt do složky ../client -> příkaz npm start
+4. nastartovat server pro express
+    a. jít do složky 2fish/server/
+    b. příkaz node app.js
+5. nastartovat react
+    a. vlézt do složky 2fish/client
+    b. příkaz npm start
+
+Poznámky:
+nutno používat minimální css pro bootstrap: import 'bootstrap/dist/css/bootstrap.css';

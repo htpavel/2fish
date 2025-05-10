@@ -6,15 +6,14 @@
 // return dokáže vrátit pouze jeden tag (musí se obalit-např.<div>....</div> nebo použít mrtvé závorky <>...</> vyhneme se pak vnořeným "divům")
 
 import './App.css';
-import AddCatchButton from './components/AddCatchButton';
-import SummaryButton from './components/SummaryButton';
+import Layout from './components/Layout';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const App = () => {
   return (
-        <div>
-          <AddCatchButton></AddCatchButton>
-          <SummaryButton></SummaryButton>
-        </div>
+    <div>
+      <Layout/>
+    </div>
   )
 }
 
