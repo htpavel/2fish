@@ -5,15 +5,8 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; 
 }
-button {
-  font-size: 15px;
-  font-weight: bold;
-  border-radius: 5px;
-  border-width: 1px;
-  height: 35px;
-  cursor: pointer;
-}
+
 
 

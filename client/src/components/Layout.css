@@ -1,13 +1,20 @@
-.container {
+.layout-container {
   display: flex;
   flex-direction: column;
-  align-content: center;
+  flex-wrap: nowrap;
+}
+
+.layout-container img {
+  width: 40px;
 }
 
 .layout-header {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background-color: lavender;
   height: 40px;
   border: solid;
@@ -15,22 +22,29 @@
   border-left-width: 0px;
   border-right-width: 0px;
   border-bottom-width: 1px;
-  text-align: center;
   border-color: rgb(80, 25, 105);
   font-size: 30px;
   font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.layout-appname {
-  width: 50em;
-  
+.layout-dashboard-container {
+  display: flex;
+  flex-direction: row;
 }
-.layout-menu{
+
+.layout-left {
+  width: 100%;
 }
 
 .layout-dashboard {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  height: 500px;
+  width: 200em;
+}
+
+.layout-right {
+  width: 100%;
 }

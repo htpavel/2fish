@@ -1,0 +1,21 @@
+.catch-sp-date{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    font-weight: bold;
+}
+.catch-date{
+padding-right: 10px;
+margin-left: 2px;
+}
+.catch-species{
+    padding-left: 10px;
+    margin-right: 2px;
+}
+
+.catch-details-container{
+    font-size: 15px;
+    display: flex;
+    margin: 10px;
+}
