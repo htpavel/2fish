@@ -1,12 +1,13 @@
 import Dropdown from 'react-bootstrap/Dropdown';
+import "./SpeciesFiltr.css";
 
 
 const SpeciesFiltr = () => {
     return (
         <div className="filtr-container">
             <Dropdown>
-                <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                    Dropdown Button
+                <Dropdown.Toggle className="button-menu" variant="secondary" id="dropdown-basic">
+                    Všechny druhy
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>

@@ -1,3 +1,12 @@
 .filtr-container{
 
 }
+
+.button-menu{
+  background-color: white !important; /* Změna barvy pozadí tlačítka */
+  color: black !important;
+  border-radius: 0px !important;
+  border: solid !important;
+  border-width: 1px !important;
+    
+}

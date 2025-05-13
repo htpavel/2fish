@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 
 const ButtonAddFish = () =>{
     return (
-        <Button variant="primary">Přidat úlovek</Button>
+        <Button variant="primary" className="button-addFish">Přidat úlovek</Button>
     )
 }
 

@@ -22,6 +22,11 @@ const Dashboard = () => {
                 <Catch />
             </div>
             <div className="footer-container">
+                <hr className="dashboard-line"></hr>
+                <div className="dashboard-summary-container">
+                    <div className="dashboard-weight">&#8721; kg:12,4</div>
+                    <div className="dashboard-length">&#8721; m: 1,6</div>
+                </div>
                 <div className="dasboard-buttons">
                     <div className="dasborad-btnSummary">
                         <ButtonSummary />
