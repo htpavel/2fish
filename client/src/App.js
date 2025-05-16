@@ -5,16 +5,27 @@
 // v return musí něco být
 // return dokáže vrátit pouze jeden tag (musí se obalit-např.<div>....</div> nebo použít mrtvé závorky <>...</> vyhneme se pak vnořeným "divům")
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import Layout from './components/Layout';
 import 'bootstrap/dist/css/bootstrap.css';
+import ErrorPage from "./components/ErrorPage";
+import Layout from './components/Layout';
+import Dashboard from "./components/Dashboard";
+import About from "./components/About";
+
 
 const App = () => {
   return (
-    <div>
-      <Layout/>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />} >
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
