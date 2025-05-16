@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const port = 3333;
 
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 })
 
+app.use(cors({ origin: 'http://localhost:3000' })); //povolí blokování přístupu
 app.use("/catch", catchController);
 app.use("/species", speciesController);
 

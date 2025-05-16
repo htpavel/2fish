@@ -1,25 +1,27 @@
 import "./Dashboard.css";
+import React, { useState } from 'react';
 import SpeciesFiltr from "./SpeciesFiltr";
-import Catch from "./Catch";
+import CatchList from "./CatchList";
 import ButtonAddFish from "./ButtonAddFish";
 import ButtonSummary from "./ButtonSummary";
 
+
 const Dashboard = () => {
+
+    const [selectedSpecies, setSelectedSpecies] = useState('Všechny druhy');
+
+    const handleSpeciesChange = (species) => {
+         console.log('Změněn druh v Dashboardu:', species);
+        setSelectedSpecies(species);
+    };
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
                 Úlovky
-                <SpeciesFiltr />
+                <SpeciesFiltr onSpeciesChange={handleSpeciesChange} />
             </div>
             <div className="dashboard-catch">
-                <Catch />
-                <Catch />
-                <Catch />
-                <Catch />
-                <Catch />
-                <Catch />
-                <Catch />
-                <Catch />
+                <CatchList selectedSpecies={selectedSpecies} />
             </div>
             <div className="footer-container">
                 <hr className="dashboard-line"></hr>
