@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Catch from './Catch';
 
-const CatchList = ({ selectedSpecies }) => {
+const DashboardSummary = ({ selectedSpecies }) =>{
   const [catches, setCatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +18,7 @@ const CatchList = ({ selectedSpecies }) => {
         setCatches(data.listFish);
       } catch (err) {
         setError(err);
-        console.error("Chyba při načítání dat o úlovcích:", err);
+        console.error("Chyba při načítání dat o úlovcích pro souhrn:", err);
       } finally {
         setLoading(false);
       }
@@ -32,28 +31,23 @@ const CatchList = ({ selectedSpecies }) => {
     ? catches
     : catches.filter(catchItem => catchItem.name === selectedSpecies);
 
+  const totalLength = filteredCatches.reduce((sum, catchItem) => sum + catchItem.length, 0).toFixed(2);
+  const totalWeight = filteredCatches.reduce((sum, catchItem) => sum + catchItem.weight, 0).toFixed(2);
+
   if (loading) {
-    return <div>Načítám úlovky...</div>;
+    return <div>Načítám souhrn...</div>;
   }
 
   if (error) {
-    return <div>Chyba při načítání úlovků: {error.message}</div>;
+    return <div>Chyba při načítání souhrnu: {error.message}</div>;
   }
 
   return (
-    <div className="dashboard-catch">
-      {filteredCatches.map((catchItem) => (
-        <Catch
-          key={catchItem.id}
-          date={catchItem.date}
-          species={catchItem.name}
-          districtNr={catchItem.districtNr}
-          weight={catchItem.weight}
-          length={catchItem.length}
-        />
-      ))}
+    <div className="dashboard-summary-container">
+      <div className="dashboard-weight">&#8721; kg: {totalWeight}</div>
+      <div className="dashboard-length">&#8721; m: {(totalLength / 100).toFixed(2)}</div> {/* Převod cm na m */}
     </div>
   );
 }
 
-export default CatchList;
+export default DashboardSummary;

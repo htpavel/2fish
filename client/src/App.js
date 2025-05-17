@@ -11,8 +11,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ErrorPage from "./components/ErrorPage";
 import Layout from './components/Layout';
 import Dashboard from "./components/Dashboard";
-import About from "./components/About";
-
+import Summary from "./components/Summary";
+import Species from "./components/Species";
 
 const App = () => {
   return (
@@ -20,7 +20,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />} >
           <Route path="/" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/species" element={<Species />} />
+          <Route path="/summary" element={<Summary />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>

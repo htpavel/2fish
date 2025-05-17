@@ -17,7 +17,6 @@ const Header = () => {
             <Dropdown.Menu show={isMenuOpen} align={'start'}> 
                 <Dropdown.Item eventKey="1" onClick={toggleMenu} as={Link} to="/">Dashboard</Dropdown.Item>
                 <Dropdown.Item eventKey="2" onClick={toggleMenu} as={Link} to="/species">Druhy ryb</Dropdown.Item>
-                <Dropdown.Item eventKey="3"  onClick={toggleMenu} as={Link} to="/about">O aplikaci</Dropdown.Item>
             </Dropdown.Menu>
         </div>
     )

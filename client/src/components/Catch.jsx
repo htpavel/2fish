@@ -2,7 +2,7 @@ import "./Catch.css";
 import { useState } from 'react';
 
 
-function Catch({ date, species, districtNr, weight, length }) {
+const Catch = ({ date, species, districtNr, weight, length }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     const handleClick = () => {
