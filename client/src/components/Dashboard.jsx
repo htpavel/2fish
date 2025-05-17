@@ -5,12 +5,12 @@ import ButtonAddFish from './ButtonAddFish';
 import './Dashboard.css';
 import Summary from './Summary';
 
-function Dashboard() {
-  const [selectedSpecies, setSelectedSpecies] = useState('Všechny druhy');
-  const [showSummaryModal, setShowSummaryModal] = useState(false);
+const Dashboard = () => {
+  const [selectedSpecies, setSelectedSpecies] = useState('Všechny druhy'); // Stav pro filtr úlovků podle druhů ryb
+  const [showSummaryModal, setShowSummaryModal] = useState(false); //Stav pro modální okno výkaz
   const [catches, setCatches] = useState([]); // Stav pro všechny úlovky
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Stav pro načítání úlovků
+  const [error, setError] = useState(null); // Stav pro chyby
 
   const handleSpeciesChange = (species) => {
     setSelectedSpecies(species);
@@ -46,6 +46,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
+  //filtr na výběr druhů ryb, které se zobrazují na dashboardu
   const filteredCatches = selectedSpecies === 'Všechny druhy'
     ? catches
     : catches.filter(catchItem => catchItem.name === selectedSpecies);
@@ -74,15 +75,14 @@ function Dashboard() {
           <div className="dashboard-length">&#8721; m: {(filteredCatches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2)}</div>
         </div>
         <div className="dasboard-buttons">
-          <button onClick={handleShowSummaryModal}>Výkaz</button>
+          <button className="button-summary" onClick={handleShowSummaryModal}>Výkaz</button>
           <ButtonAddFish />
         </div>
       </div>
       {showSummaryModal && (
         <Summary
           onClose={handleCloseSummaryModal}
-          selectedSpecies={selectedSpecies}
-          catches={filteredCatches} // Předáváme filtrovaná data
+          catches={catches} // Předáváme všechny úlovky
         />
       )}
     </div>

@@ -21,7 +21,6 @@ const App = () => {
         <Route path="/" element={<Layout />} >
           <Route path="/" element={<Dashboard />} />
           <Route path="/species" element={<Species />} />
-          <Route path="/summary" element={<Summary />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>

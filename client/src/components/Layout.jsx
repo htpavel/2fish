@@ -1,12 +1,17 @@
-import  {Outlet}  from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import HeaderMenu from './HeaderMenu';
 import "./Layout.css";
 
 const Layout = () => {
+
+    //klik na rybičku přesměruje na dashboard
+    const handleImageClick = () => {
+        window.location.href = '/';
+    };
     return (
         <div className="layout-container">
-             <div className="layout-header">
-                <img src="../logo-32x32.png" alt="logo" />
+            <div className="layout-header">
+                <img src="../logo-32x32.png" alt="logo" onClick={handleImageClick} />
                 2FISH
                 <HeaderMenu />
             </div>

@@ -1,3 +1,5 @@
+/*pomocná komponenta, kde se vypisují všechny úlovky*/
+
 import React, { useState, useEffect } from 'react';
 import Catch from './Catch';
 
@@ -28,6 +30,15 @@ const CatchList = ({ selectedSpecies }) => {
     fetchData();
   }, []);
 
+  // přeformátuje datum z formátu yyyy-mm-dd na formát dd.mm.yyyy
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() vrací měsíce od 0
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
   const filteredCatches = selectedSpecies === 'Všechny druhy'
     ? catches
     : catches.filter(catchItem => catchItem.name === selectedSpecies);
@@ -45,7 +56,7 @@ const CatchList = ({ selectedSpecies }) => {
       {filteredCatches.map((catchItem) => (
         <Catch
           key={catchItem.id}
-          date={catchItem.date}
+          date={formatDate(catchItem.date)} 
           species={catchItem.name}
           districtNr={catchItem.districtNr}
           weight={catchItem.weight}

@@ -46,17 +46,23 @@
     font-weight: bold;
 }
 
-
-
 .dasboard-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 10px;
-    
 }
 
 .dasboard-buttons button {
     width: 130px;
     height: 45px;
+    border: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}
+
+.button-summary{
+    background-color:blanchedalmond;
+    border-color:burlywood;
+    font-weight: bold;
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import "./Summary.css"
 
-const Summary = ({ onClose, selectedSpecies, catches }) => {
+const Summary = ({ onClose, catches }) => {
   
-  const totalWeight = catches.reduce((sum, fish) => sum + fish.weight, 0).toFixed(2);
-  const totalLength = (catches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2);
+  const totalWeight = catches.reduce((sum, fish) => sum + fish.weight, 0).toFixed(2); // výpočet pro celkovou váhu
+  const totalLength = (catches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2); // výpočet pro celkovou délku
 
   // Seskupení úlovků podle druhu a výpočet součtů
   const summaryBySpecies = catches.reduce((acc, fish) => {
@@ -14,7 +15,7 @@ const Summary = ({ onClose, selectedSpecies, catches }) => {
       acc[name] = { totalWeight: 0, totalLength: 0, count: 0 };
     }
     acc[name].totalWeight += weight;
-    acc[name].totalLength += length / 100; // Převod na metry
+    acc[name].totalLength += length / 100; // Převod na metry 
     acc[name].count++;
     return acc;
   }, {});
@@ -22,12 +23,12 @@ const Summary = ({ onClose, selectedSpecies, catches }) => {
   return (
     <div className="modalShow">
       <Modal show={true} onHide={onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Výkaz</Modal.Title>
+        <Modal.Header className="summary-header">
+          <Modal.Title className="summary-header-title">Roční výkaz 2025</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <h3>Celkový souhrn</h3>
+          <div className="summary-sumWeight">Ceková statistika</div>
           <p>Celková váha: {totalWeight} kg</p>
           <p>Celková délka: {totalLength} m</p>
 
