@@ -17,6 +17,6 @@
   
 }
 
-.summary-sumWeight{
+.summary-sumWeight, .summary-sumLength{
     font-weight: bold;
 }

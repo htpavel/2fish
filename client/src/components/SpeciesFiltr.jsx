@@ -2,49 +2,37 @@ import React, { useState, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import "./SpeciesFiltr.css";
 
+const SpeciesFiltr = ({ onSpeciesChange, species }) => {
+  const [selectedSpeciesText, setSelectedSpeciesText] = useState('Vybrat druh');
 
-const SpeciesFiltr = ({ onSpeciesChange }) => {
- const [fishSpecies, setFishSpecies] = useState([]);
-  const [selectedSpeciesText, setSelectedSpeciesText] = useState('Vybrat druh'); 
- 
-  
-  const allSpeciesItem = { name: 'Všechny druhy', id: 'all' }; // Přidá položku Všechny druhy
+  const allSpeciesItem = { name: 'Všechny druhy', id: 'all' };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3333/species/List');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setFishSpecies(data.listSP);
-      } catch (error) {
-        console.error("Chyba při načítání dat o druzích:", error);
-      }
-    };
+    if (species && species.length > 0) {
+      const initialSelected = species.find(s => s.id === 'all') || species[0] || allSpeciesItem;
+      setSelectedSpeciesText(initialSelected.name);
+    }
+  }, [species]);
 
-    fetchData();
-  }, []);
-
-  const handleSelect = (eventKey) => {
-    onSpeciesChange(eventKey); // když se změní druh ryby
-    setSelectedSpeciesText(eventKey); // vypíše vybraný druh ryby
+  const handleSelect = (selectedId) => {
+    const selectedItem = species.find(s => s.id === selectedId) || allSpeciesItem;
+    onSpeciesChange(selectedId); // Předáváme ID
+    setSelectedSpeciesText(selectedItem.name);
   };
 
   return (
     <div className="filtr-container">
       <Dropdown onSelect={handleSelect}>
         <Dropdown.Toggle className="button-menu" variant="secondary" id="dropdown-basic">
-          {selectedSpeciesText} 
+          {selectedSpeciesText}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item key={allSpeciesItem.id} eventKey={allSpeciesItem.name}>
+          <Dropdown.Item key={allSpeciesItem.id} eventKey={allSpeciesItem.id}>
             {allSpeciesItem.name}
           </Dropdown.Item>
-          {fishSpecies.map((fish) => (
-            <Dropdown.Item key={fish.id} eventKey={fish.name}>
+          {species && species.filter(s => s.id !== 'all').map((fish) => (
+            <Dropdown.Item key={fish.id} eventKey={fish.id}>
               {fish.name}
             </Dropdown.Item>
           ))}

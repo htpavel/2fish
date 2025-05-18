@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import "./Summary.css"
 
 const Summary = ({ onClose, catches }) => {
-  
+
   const totalWeight = catches.reduce((sum, fish) => sum + fish.weight, 0).toFixed(2); // výpočet pro celkovou váhu
   const totalLength = (catches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2); // výpočet pro celkovou délku
 
@@ -21,17 +21,17 @@ const Summary = ({ onClose, catches }) => {
   }, {});
 
   return (
-    <div className="modalShow">
+    <div className="modal-show">
       <Modal show={true} onHide={onClose}>
         <Modal.Header className="summary-header">
           <Modal.Title className="summary-header-title">Roční výkaz 2025</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div className="summary-sumWeight">Ceková statistika</div>
-          <p>Celková váha: {totalWeight} kg</p>
-          <p>Celková délka: {totalLength} m</p>
-
+          <div className="summary-sumWeight">Ceková váha ulovených ryb</div>
+          <div>{totalWeight} kg</div>
+          <div className="summary-sumLength">Ceková délka ulovených ryb</div>
+          <div>{totalLength} m</div>
           <h3>Souhrn podle druhů</h3>
           {Object.entries(summaryBySpecies).map(([species, summary]) => (
             <div key={species}>

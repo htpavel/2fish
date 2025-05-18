@@ -5,15 +5,17 @@ import ButtonAddFish from './ButtonAddFish';
 import './Dashboard.css';
 import Summary from './Summary';
 
-const Dashboard = () => {
-  const [selectedSpecies, setSelectedSpecies] = useState('Všechny druhy'); // Stav pro filtr úlovků podle druhů ryb
-  const [showSummaryModal, setShowSummaryModal] = useState(false); //Stav pro modální okno výkaz
-  const [catches, setCatches] = useState([]); // Stav pro všechny úlovky
-  const [loading, setLoading] = useState(true); // Stav pro načítání úlovků
-  const [error, setError] = useState(null); // Stav pro chyby
 
-  const handleSpeciesChange = (species) => {
-    setSelectedSpecies(species);
+const Dashboard = () => {
+  const [selectedSpeciesId, setSelectedSpeciesId] = useState('all');
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [catches, setCatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [speciesList, setSpeciesList] = useState([]); // Pro seznam druhů pro filtr
+
+  const handleSpeciesChange = (speciesId) => {
+    setSelectedSpeciesId(speciesId);
   };
 
   const handleShowSummaryModal = () => {
@@ -29,15 +31,25 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:3333/catch/List');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const catchResponse = await fetch('http://localhost:3333/catch/List');
+        if (!catchResponse.ok) {
+          throw new Error(`HTTP error! status: ${catchResponse.status} - catch/List`);
         }
-        const data = await response.json();
-        setCatches(data.listFish);
+        const catchData = await catchResponse.json();
+        setCatches(catchData.listFish);
+
+        const speciesResponse = await fetch('http://localhost:3333/species/List');
+        if (!speciesResponse.ok) {
+          throw new Error(`HTTP error! status: ${speciesResponse.status} - species/List`);
+        }
+        const speciesData = await speciesResponse.json();
+        // Zpracujeme data o druzích pro SpeciesFiltr
+        const formattedSpeciesList = [{ name: 'Všechny druhy', id: 'all' }, ...speciesData.listSP];
+        setSpeciesList(formattedSpeciesList);
+
       } catch (err) {
         setError(err);
-        console.error("Chyba při načítání dat o úlovcích:", err);
+        console.error("Chyba při načítání dat:", err);
       } finally {
         setLoading(false);
       }
@@ -46,27 +58,27 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  //filtr na výběr druhů ryb, které se zobrazují na dashboardu
-  const filteredCatches = selectedSpecies === 'Všechny druhy'
+  const filteredCatches = selectedSpeciesId === 'all'
     ? catches
-    : catches.filter(catchItem => catchItem.name === selectedSpecies);
+    : catches.filter(catchItem => catchItem.speciesId === selectedSpeciesId);
 
-  if (loading) {
+    console.log("selectedSpeciesId:", selectedSpeciesId);
+    console.log("filteredCatches:", filteredCatches);
+  if (loading) {;
     return <div>Načítám data...</div>;
   }
 
-  if (error) {
+    if (error) {
     return <div>Chyba při načítání dat: {error.message}</div>;
   }
-
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
         Úlovky
-        <SpeciesFiltr onSpeciesChange={handleSpeciesChange} />
+        <SpeciesFiltr species={speciesList} onSpeciesChange={handleSpeciesChange} />
       </div>
       <div className="dashboard-catch">
-        <CatchList selectedSpecies={selectedSpecies} />
+        <CatchList catches={filteredCatches} />
       </div>
       <div className="footer-container">
         <hr className="dashboard-line"></hr>
