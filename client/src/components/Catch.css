@@ -2,7 +2,7 @@
     margin-top: 10px;
     display: flex;
     flex-direction: row;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
 }
 .catch-date{
@@ -15,7 +15,7 @@ margin-left: 2px;
 }
 
 .catch-details-container{
-    font-size: 15px;
+    font-size: 18px;
     display: flex;
     margin: 10px;
 }

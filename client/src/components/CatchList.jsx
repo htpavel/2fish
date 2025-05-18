@@ -1,11 +1,10 @@
 /*pomocná komponenta, kde se vypisují všechny úlovky*/
 
-import React from 'react';
+import "./CatchList.css";
 import Catch from './Catch';
 
 const CatchList = ({ catches }) => {
-  // přeformátuje datum z formátu YYYY-MM-DD na formát DD.MM.YYYY
-  const formatDate = (dateString) => {
+    const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() vrací měsíce od 0
@@ -13,10 +12,10 @@ const CatchList = ({ catches }) => {
     return `${day}.${month}.${year}`;
   };
 
-  //console.log(catches);
 
+  //Když neexistují žádné úlovky vybraného druhu ryby
   if (!catches || catches.length === 0) {
-    return <div>Žádné úlovky k zobrazení.</div>;
+    return <div className="catchlist-nocatch">Žádné úlovky k zobrazení.</div>;
   }
 
   return (

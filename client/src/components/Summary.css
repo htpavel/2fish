@@ -1,3 +1,8 @@
+.summary-modal-show{
+    display: block;
+    position: initial;
+}
+
 .summary-header{    
   display: flex;
   justify-content: center;
@@ -17,6 +22,25 @@
   
 }
 
-.summary-sumWeight, .summary-sumLength{
+.summary-sumWeight, .summary-sumLength, .summary-allSpecies{
+  font-size: 20px;  
+  font-weight: bold;
+}
+
+.summary-text{
+  padding-bottom: 10px;
+}
+
+.summary-footer{
+  display: flex;
+  justify-content: center;
+}
+
+.summary-button-close{
+    background-color: rgb(44, 158, 211);
+    border: solid;
+    border-color:rgb(102, 102, 250);
+    border-width: 1px;
     font-weight: bold;
+    width: 120px;
 }

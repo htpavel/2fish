@@ -21,7 +21,7 @@ const Summary = ({ onClose, catches }) => {
   }, {});
 
   return (
-    <div className="modal-show">
+    <div className="summary-modal-show">
       <Modal show={true} onHide={onClose}>
         <Modal.Header className="summary-header">
           <Modal.Title className="summary-header-title">Roční výkaz 2025</Modal.Title>
@@ -29,22 +29,20 @@ const Summary = ({ onClose, catches }) => {
 
         <Modal.Body>
           <div className="summary-sumWeight">Ceková váha ulovených ryb</div>
-          <div>{totalWeight} kg</div>
+          <div className="summary-text">{totalWeight} kg</div>
           <div className="summary-sumLength">Ceková délka ulovených ryb</div>
-          <div>{totalLength} m</div>
-          <h3>Souhrn podle druhů</h3>
+          <div className="summary-text">{totalLength} m</div>
+          <div className="summary-allSpecies">Délka a váha podle druhů ryb</div>
           {Object.entries(summaryBySpecies).map(([species, summary]) => (
             <div key={species}>
-              <h4>{species}</h4>
-              <p>Celková váha: {summary.totalWeight.toFixed(2)} kg</p>
-              <p>Celková délka: {summary.totalLength.toFixed(2)} m</p>
+              <div className="summary-sumCatch">{species}: {summary.totalLength.toFixed(2)} m | {summary.totalWeight.toFixed(2)} kg</div>
               <p>Počet úlovků: {summary.count}</p>
             </div>
           ))}
         </Modal.Body>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onClose}>
+        <Modal.Footer className="summary-footer">
+          <Button className="summary-button-close" variant="secondary" onClick={onClose}>
             Zavřít
           </Button>
         </Modal.Footer>

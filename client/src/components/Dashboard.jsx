@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import SpeciesFiltr from './SpeciesFiltr';
 import CatchList from './CatchList';
-import ButtonAddFish from './ButtonAddFish';
 import './Dashboard.css';
 import Summary from './Summary';
+import Button from 'react-bootstrap/esm/Button';
+import ItemForm from './ItemForm';
 
 
 const Dashboard = () => {
   const [selectedSpeciesId, setSelectedSpeciesId] = useState('all');
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [showAddFishModal, setShowAddFishModal] = useState(false);
   const [catches, setCatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +27,14 @@ const Dashboard = () => {
   const handleCloseSummaryModal = () => {
     setShowSummaryModal(false);
   };
+
+  const hadleShowAddFishModal = () => {
+    setShowAddFishModal(true);
+  }
+
+  const hadleCloseAddFishModal = () => {
+    setShowAddFishModal(false);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,15 +97,15 @@ const Dashboard = () => {
           <div className="dashboard-length">&#8721; m: {(filteredCatches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2)}</div>
         </div>
         <div className="dasboard-buttons">
-          <button className="button-summary" onClick={handleShowSummaryModal}>Výkaz</button>
-          <ButtonAddFish />
+          <Button className="button-summary" onClick={handleShowSummaryModal}>Výkaz</Button>
+          <Button variant="primary" className="button-addfish" onClick={handleShowSummaryModal}>Přidat úlovek</Button>
         </div>
       </div>
       {showSummaryModal && (
-        <Summary
-          onClose={handleCloseSummaryModal}
-          catches={catches} // Předáváme všechny úlovky
-        />
+        <Summary onClose={handleCloseSummaryModal} catches={catches}/> // Předáváme všechny úlovky
+      )}
+      {showAddFishModal && (
+        <ItemForm onClose={hadleShowAddFishModal} idCatch={catches}/> // oteření okna nového úlovku
       )}
     </div>
   );
