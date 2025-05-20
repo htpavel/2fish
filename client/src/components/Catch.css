@@ -6,8 +6,8 @@
     font-weight: bold;
 }
 .catch-date{
-padding-right: 10px;
-margin-left: 2px;
+    padding-right: 10px;
+    margin-left: 2px;
 }
 .catch-species{
     padding-left: 10px;
@@ -17,5 +17,31 @@ margin-left: 2px;
 .catch-details-container{
     font-size: 18px;
     display: flex;
+    flex-direction: column; 
     margin: 10px;
+}
+
+.catch-districtNr {
+    display: flex;       
+    align-items: center; 
+    gap: 15px;           
+}
+
+.catch-actions {
+    display: flex;          
+    flex-direction: row;    
+    gap: 5px;               
+    
+}
+
+.catch-edit img,
+.catch-delete img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.catch-weight,
+.catch-length {
+    margin-top: 5px;
 }

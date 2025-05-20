@@ -2,3 +2,14 @@
     display: block;
     position: initial;
 }
+
+.itemForm-buttons{
+display: flex;
+justify-content: space-between;
+}
+
+.itemForm-buttons Button{
+font-weight: bold;
+width: 150px;
+height: 50px;
+}
