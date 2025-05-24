@@ -1,0 +1,66 @@
+
+.species-dashboard-container {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.species-dashboard-container h2 {
+   text-align: left;
+    margin-bottom: 20px;
+    color: #343a40;
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.species-header-controls {
+    display: flex;
+    justify-content: flex-end; /* Tlačítko Přidat vpravo */
+    margin-bottom: 20px;
+}
+
+.species-loading,
+.species-error {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #dc3545; /* Pro chyby */
+}
+.species-loading {
+    color: #007bff; /* Pro načítání */
+}
+
+.species-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.species-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.species-name {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #495057;
+}
+
+.species-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-icon {
+    width: 24px; /* Velikost ikon */
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.action-icon:hover {
+    transform: scale(1.1);
+}
+

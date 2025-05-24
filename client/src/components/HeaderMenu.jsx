@@ -1,3 +1,4 @@
+/* Navigační menu */
 import "./HeaderMenu.css";
 import { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';

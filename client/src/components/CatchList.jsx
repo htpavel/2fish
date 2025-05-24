@@ -1,3 +1,4 @@
+/* seznam všech úlovků */
 import "./CatchList.css";
 import Catch from './Catch';
 
@@ -31,8 +32,8 @@ const CatchList = ({ catches, onDeleteCatch, onEditCatch }) => {
                     districtNr={catchItem.districtNr}
                     weight={catchItem.weight}
                     length={catchItem.length}
-                    onDelete={() => onDeleteCatch(catchItem.id)}
-                    onEdit={() => onEditCatch(catchItem)} // PŘEDÁVÁME CELÝ OBJEKT ÚLOVKU K EDITACI
+                    onDelete={() => onDeleteCatch(catchItem.id)} // tlačítko delete
+                    onEdit={() => onEditCatch(catchItem)} // tlačítko edit
                 />
             ))}
         </div>

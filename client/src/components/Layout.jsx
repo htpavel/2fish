@@ -1,3 +1,4 @@
+/*Layout aplikace*/
 import { Outlet } from 'react-router-dom';
 import HeaderMenu from './HeaderMenu';
 import "./Layout.css";

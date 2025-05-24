@@ -1,9 +1,8 @@
-// Catch.jsx
+/* komponenta jednoho úlovku */
 import "./Catch.css";
 import { useState } from 'react';
 
 
-// Přijímáme novou prop: onEdit
 const Catch = ({ id, date, species, districtNr, weight, length, onDelete, onEdit }) => {
     const [isVisible, setIsVisible] = useState(false);
 

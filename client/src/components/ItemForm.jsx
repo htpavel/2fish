@@ -1,91 +1,172 @@
-import React, { useState, useEffect } from 'react'; 
-import Button from 'react-bootstrap/Button';
+/* Formulář pro editaci stávajícího a přidání nového úlovku */
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import "./ItemForm.css";
+import ConfirmWeightLimitModal from './ConfirmWeight';
 
-const ItemForm = ({ onClose, speciesList, initialData, onSubmit }) => {
-  
-  // Stavy pro data formuláře
-  const [formData, setFormData] = useState({
-    date: '',
-    speciesName: '', 
-    districtNr: '',
-    length: '',
-    weight: ''
-  });
+const ItemForm = ({ onClose, initialData, speciesList, onSubmit }) => {
+
+  const [date, setDate] = useState('');
+  const [districtNr, setDistrictNr] = useState(''); // Uchováváme jako řetězec pro formátování
+  const [weight, setWeight] = useState('');
+  const [length, setLength] = useState('');
+  const [speciesName, setSpeciesName] = useState('');
+  const [id, setId] = useState(null); // ID úlovku pro režim editace
+
+
+  const [showWeightLimitModal, setShowWeightLimitModal] = useState(false); // Řídí zobrazení potvrzovacího modalu
+  const [tempCatchData, setTempCatchData] = useState(null); // Dočasně uchovává data úlovku před potvrzením uložení
+  const [dailyTotalWeight, setDailyTotalWeight] = useState(0); // Celková váha ryb pro daný den, získaná ze serveru
 
   useEffect(() => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const currentDate = `${year}-${month}-${day}`;
-
-    // rohodnutí jestli okno je nový úlovek nebo editace
     if (initialData) {
-      // Pokud máme initialData, použijeme je pro předvyplnění formuláře
-      setFormData({
-        date: initialData.date,
-        speciesName: initialData.name, // Předpokládáme, že initialData.name je název druhu
-        districtNr: initialData.districtNr,
-        length: initialData.length,
-        weight: initialData.weight
-      });
+
+      setId(initialData.id);
+      setDate(initialData.date);
+      // Zajištění formátu čísla revíru s vedoucími nulami - 5 číseč
+      setDistrictNr(String(initialData.districtNr).padStart(5, '0'));
+      setWeight(initialData.weight);
+      setLength(initialData.length);
+
+      const foundSpecies = speciesList.find(s => s.id === initialData.speciesId);
+      setSpeciesName(foundSpecies ? foundSpecies.name : '');
     } else {
-      // Jinak nastavíme výchozí hodnoty (pro nový úlovek)
-      setFormData({
-        date: currentDate,
-        speciesName: '', // Nebo "Vyberte druh ryby"
-        districtNr: '',
-        length: '',
-        weight: ''
-      });
+      // Režim přidání nového úlovku: Nastavíme datum na aktuální den
+      setDate(new Date().toISOString().slice(0, 10));
     }
-  }, [initialData]); 
+  }, [initialData, speciesList]); // Závislosti efektu
 
-  // Získání unikátních názvů druhů ryb ze speciesList
-  const uniqueSpeciesNames = [...new Set(speciesList.map(speciesItem => speciesItem.name))];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
+  const handleDistrictNrChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value) && value.length <= 5) {
+      setDistrictNr(value);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Zabrání výchozímu chování formuláře -- znovunačtení stránky
 
-    // validace
-    if (!formData.date || !formData.speciesName || !formData.districtNr || !formData.length || !formData.weight) {
+  const handleFinalSubmit = (data) => {
+    onSubmit(data);
+    onClose(); 
+    setShowWeightLimitModal(false); 
+    setTempCatchData(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+
+    if (!date || !districtNr || !weight || !length || !speciesName) {
       alert('Prosím vyplňte všechna pole.');
       return;
     }
 
-    // Voláme onSubmit funkci předanou z rodičovské komponenty
-    // Předáme ID úlovku, pokud existuje (pro úpravu), jinak undefined pro přidání
-    onSubmit({ ...formData, id: initialData ? initialData.id : null });
+    if (districtNr.length !== 5) {
+      alert('Číslo revíru musí mít přesně 5 číslic.');
+      return;
+    }
+
+    const formattedDistrictNr = String(districtNr).padStart(5, '0');
+
+
+    const currentCatchData = {
+      id: id,
+      date: date,
+      districtNr: formattedDistrictNr,
+      weight: parseFloat(weight), 
+      length: parseFloat(length),
+      speciesName: speciesName, 
+    };
+
+    // Kontrola denního váhového limitu se provádí při přidávání nového úlovku
+    if (!initialData) {
+      try {
+        const apiUrl = `http://localhost:3333/catch/checkWeight?date=${currentCatchData.date}`;
+
+        const response = await fetch(apiUrl, {
+          method: 'GET', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text(); 
+          throw new Error(`Chyba při HTTP požadavku! Status: ${response.status}. Detaily: ${errorText}`);
+        }
+
+        const serverResponse = await response.json();
+        const { totalWeight, overWeight } = serverResponse; 
+
+        const dailyLimit = 7.0; // denní váhový limit
+
+        const potentialTotalWeight = totalWeight + currentCatchData.weight;
+
+        if (overWeight || potentialTotalWeight > dailyLimit) {
+          setTempCatchData(currentCatchData); 
+          setDailyTotalWeight(totalWeight); 
+          setShowWeightLimitModal(true); 
+          return; 
+        }
+
+      } catch (error) {
+        console.error('Chyba při kontrole váhového limitu:', error);
+        alert(`Nepodařilo se zkontrolovat denní limit. Zkuste to prosím znovu. Detaily: ${error.message}`);
+        return;
+      }
+    }
+
+    handleFinalSubmit(currentCatchData);
   };
 
   return (
-    <div className="itemForm-modal-show">
+    <>
+
       <Modal show={true} onHide={onClose}>
         <Modal.Header closeButton>
           <Modal.Title>{initialData ? 'Upravit úlovek' : 'Přidat úlovek'}</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
-          <Form onSubmit={handleSubmit}> {/* Přesuneme onSubmit na Form element */}
+          <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
               <Form.Label>Datum</Form.Label>
               <Form.Control
                 type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                max={new Date().toISOString().split('T')[0]} // max na dnešní datum
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Číslo revíru (5 číslic)</Form.Label>
+              <Form.Control
+                type="text"
+                value={districtNr}
+                onChange={handleDistrictNrChange}
+                maxLength={5}
+                required
+                placeholder="Např. 00123"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Váha (kg)</Form.Label>
+              <Form.Control
+                type="number"
+                step="0.01" // Umožňuje zadání desetinných čísel
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Délka (cm)</Form.Label>
+              <Form.Control
+                type="number"
+                step="1" // Umožňuje zadání celých čísel
+                value={length}
+                onChange={(e) => setLength(e.target.value)}
                 required
               />
             </Form.Group>
@@ -93,63 +174,46 @@ const ItemForm = ({ onClose, speciesList, initialData, onSubmit }) => {
             <Form.Group className="mb-3">
               <Form.Label>Druh ryby</Form.Label>
               <Form.Select
-                aria-label="Vyberte druh ryby"
-                name="speciesName" 
-                value={formData.speciesName}
-                onChange={handleChange}
+                value={speciesName}
+                onChange={(e) => setSpeciesName(e.target.value)}
                 required
               >
-                <option value="">Vyberte druh ryby</option> 
-                {uniqueSpeciesNames.map((speciesName, index) => (
-                  <option key={index} value={speciesName}>{speciesName}</option>
+                <option value="">Vyberte druh</option>
+                {speciesList.map((species) => (
+                  <option key={species.id} value={species.name}>
+                    {species.name}
+                  </option>
                 ))}
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Číslo revíru</Form.Label>
-              <Form.Control
-                type="number"
-                name="districtNr"
-                value={formData.districtNr}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Délka ryby (cm)</Form.Label> 
-              <Form.Control
-                type="number"
-                name="length"
-                value={formData.length}
-                onChange={handleChange}
-                placeholder="cm"
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Váha ryby (kg)</Form.Label> 
-              <Form.Control
-                type="number"
-                name="weight"
-                value={formData.weight}
-                onChange={handleChange}
-                placeholder="kg"
-                required
-              />
-            </Form.Group>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={onClose}>
+                Zrušit
+              </Button>
+              <Button variant="primary" type="submit">
+                {initialData ? 'Uložit změny' : 'Přidat'}
+              </Button>
+            </Modal.Footer>
           </Form>
         </Modal.Body>
-
-        <Modal.Footer className="itemForm-buttons">
-          <Button variant="primary" type="submit" onClick={handleSubmit}>Uložit</Button> 
-          <Button variant="secondary" onClick={onClose}>Zrušit</Button>
-        </Modal.Footer>
       </Modal>
-    </div>
+
+
+      {showWeightLimitModal && tempCatchData && (
+        <ConfirmWeightLimitModal
+          show={showWeightLimitModal} 
+          onConfirm={() => handleFinalSubmit(tempCatchData)} 
+          onCancel={() => {
+            setShowWeightLimitModal(false);
+            setTempCatchData(null); 
+          }}
+          currentCatchWeight={tempCatchData.weight} 
+          dailyTotalWeight={dailyTotalWeight} 
+        />
+      )}
+    </>
   );
-}
+};
 
 export default ItemForm;

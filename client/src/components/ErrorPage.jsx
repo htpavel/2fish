@@ -1,3 +1,5 @@
+/* 404 */
+
 import "./ErrorPage.css"
 
 const ErrorPage = () => {

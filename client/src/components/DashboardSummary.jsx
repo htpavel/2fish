@@ -1,3 +1,4 @@
+/*souhrnné položky váhy a míry zobrazené na dashboardu */
 import React, { useState, useEffect } from 'react';
 
 const DashboardSummary = ({ selectedSpecies }) =>{

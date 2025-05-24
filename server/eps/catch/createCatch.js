@@ -18,8 +18,8 @@ const schema = {
     type: "object",
     properties: {
         date: { type: "string", format: "date" }, //formát je kontrolován pomocí modulu ajv-formats
-        districtNr: { type: "number", minimum: 100000, maximum: 999999 },
-        weight: { type: "number", minimum: 1 },
+        districtNr: { type: "number", minimum: 10000, maximum: 99999 },
+        weight: { type: "number", minimum: 0 },
         length: { type: "number", minimum: 1 },
         speciesId: { type: "string", minLength: 32, maxLength: 32 },
     },

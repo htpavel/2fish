@@ -1,11 +1,13 @@
+/* klíčová komponenta
+zde se zobrazují úlovky a je implementována veškerá logika */
 import React, { useState, useEffect } from 'react';
-import SpeciesFiltr from './SpeciesFiltr'; // Předpokládám, že tato komponenta existuje
-import CatchList from './CatchList';     // Předpokládám, že tato komponenta existuje
-import './Dashboard.css';                 // Styly pro Dashboard
-import Summary from './Summary';         // Předpokládám, že tato komponenta existuje
-import Button from 'react-bootstrap/esm/Button'; // Bootstrap Button
-import ItemForm from './ItemForm';       // Komponenta formuláře pro přidání/úpravu
-import Modal from 'react-bootstrap/Modal'; // Bootstrap Modal pro potvrzení smazání
+import SpeciesFiltr from './SpeciesFiltr'; 
+import CatchList from './CatchList';     
+import './Dashboard.css';                
+import Summary from './Summary';         
+import Button from 'react-bootstrap/esm/Button'; 
+import ItemForm from './ItemForm';       
+import Modal from 'react-bootstrap/Modal'; 
 
 const Dashboard = () => {
     // Stavy pro filtraci a zobrazení dat
@@ -19,9 +21,9 @@ const Dashboard = () => {
     const [showEditFishModal, setShowEditFishModal] = useState(false); // Pro formulář editace
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false); // Pro potvrzení smazání
 
-    // Stavy pro data předávaná do modalů
+    // Stavy pro dats předávaná do modalů
     const [catchToEdit, setCatchToEdit] = useState(null); // Uchovává data úlovku pro editaci
-    const [catchIdToDelete, setCatchIdToDelete] = useState(null); // Uchovává ID úlovku ke smazání
+    const [catchIdToDelete, setCatchIdToDelete] = useState(null); // Uhovává ID úlovku ke smazání
 
     // Stavy pro načítání a chyby
     const [loading, setLoading] = useState(true);
@@ -40,8 +42,7 @@ const Dashboard = () => {
         setShowSummaryModal(false);
     };
 
-    // --- Handlery pro modal "Přidat úlovek" (ItemForm pro přidání) ---
-    const hadleShowAddFishModal = () => {
+        const hadleShowAddFishModal = () => {
         setCatchToEdit(null); // Zajištění, že se modal otevře pro přidání (ne pro editaci)
         setShowAddFishModal(true);
     }
@@ -49,28 +50,25 @@ const Dashboard = () => {
         setShowAddFishModal(false);
     }
 
-    // --- Handlery pro modal "Upravit úlovek" (ItemForm pro editaci) ---
     const handleShowEditFishModal = (catchItem) => {
-        setCatchToEdit(catchItem); // Uložíme data úlovku, který chceme editovat
-        setShowEditFishModal(true); // Zobrazíme ItemForm
+        setCatchToEdit(catchItem); 
+        setShowEditFishModal(true); 
     };
     const handleCloseEditFishModal = () => {
         setShowEditFishModal(false);
-        setCatchToEdit(null); // Vynulujeme data
+        setCatchToEdit(null); 
     };
 
-    // --- Handlery pro smazání úlovku s potvrzením ---
-    // 1. Krok: Uživatel klikne na smazat -> zobrazí se potvrzovací modal
     const handleRequestDeleteCatch = (id) => {
         setCatchIdToDelete(id);
         setShowConfirmDeleteModal(true);
     };
-    // Uzavření potvrzovacího modalu
+    
     const handleCloseConfirmDeleteModal = () => {
         setShowConfirmDeleteModal(false);
         setCatchIdToDelete(null);
     };
-    // 2. Krok: Uživatel potvrdí smazání -> provede se API volání
+    
     const handleDeleteCatch = async () => {
         if (!catchIdToDelete) return; // Zabrání spuštění, pokud není ID k smazání
 
@@ -88,7 +86,7 @@ const Dashboard = () => {
                 throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Nepodařilo se smazat úlovek'}`);
             }
 
-            // Pokud je smazání úspěšné, aktualizujeme stav catches
+            // Pokud je smazání úspěšné, aktualizujeme stav 
             setCatches(prevCatches => prevCatches.filter(catchItem => catchItem.id !== catchIdToDelete));
             console.log(`Úlovek s ID ${catchIdToDelete} byl úspěšně smazán.`);
 
@@ -101,11 +99,11 @@ const Dashboard = () => {
         }
     };
 
-    // --- Handler pro odeslání dat z ItemForm (přidání i úprava) ---
+    
     const handleSubmitCatch = async (catchData) => {
         const isEditing = catchData.id !== null; // Zjistíme, zda jde o editaci podle existence ID
         const url = isEditing ? 'http://localhost:3333/catch/update' : 'http://localhost:3333/catch/create';
-        const method = 'POST'; // Předpokládáme POST pro oba endpointy
+        const method = 'POST'; 
 
         // Najdeme speciesId z speciesListu podle názvu druhu
         const selectedSpecies = speciesList.find(s => s.name === catchData.speciesName);
@@ -114,16 +112,15 @@ const Dashboard = () => {
             return;
         }
 
-        // Sestavení payloadu pro API požadavek
         const payload = {
-            date: catchData.date, // Datum je již ve správném formátu YYYY-MM-DD
+            date: catchData.date, 
             districtNr: parseInt(catchData.districtNr),
             weight: parseFloat(catchData.weight),
             length: parseFloat(catchData.length),
-            speciesId: selectedSpecies.id // ID druhu, které API očekává
+            speciesId: selectedSpecies.id 
         };
 
-        // Pokud upravujeme, přidáme ID úlovku do payloadu
+  
         if (isEditing) {
             payload.id = catchData.id;
         }
@@ -142,25 +139,18 @@ const Dashboard = () => {
                 throw new Error(`HTTP error! status: ${response.status} - ${errorData.message || 'Nepodařilo se uložit úlovek'}`);
             }
 
-            const responseData = await response.json(); // Očekáváme odpověď z API (např. nově vytvořený objekt s ID)
-
+            const responseData = await response.json(); 
             if (isEditing) {
-                // Aktualizujeme existující úlovek v catches stavu
-                // Předpokládáme, že API buď vrací potvrzení, nebo data aktualizujeme z našeho payloadu
                 setCatches(prevCatches =>
                     prevCatches.map(c => (c.id === catchData.id ? { ...c, ...payload, name: catchData.speciesName } : c))
                 );
                 console.log(`Úlovek s ID ${catchData.id} byl úspěšně upraven.`);
             } else {
-                // Přidáme nový úlovek do catches stavu
-                // Důležité: Pokud API nevrací ID nově vytvořeného úlovku, musíme si ho nějak vygenerovat
-                // nebo provést opětovné načtení všech dat.
-                // Zde předpokládám, že responseData.id bude obsahovat ID z API
+
                 setCatches(prevCatches => [...prevCatches, { ...payload, id: responseData.id || Date.now().toString(), name: catchData.speciesName }]);
                 console.log('Nový úlovek byl úspěšně přidán.');
             }
 
-            // Zavřeme příslušný modal (pro editaci nebo přidání)
             if (isEditing) {
                 handleCloseEditFishModal();
             } else {
@@ -174,7 +164,6 @@ const Dashboard = () => {
         }
     };
 
-    // --- Efekt pro načítání dat při prvním renderování ---
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -186,7 +175,7 @@ const Dashboard = () => {
                     throw new Error(`HTTP error! status: ${catchResponse.status} - catch/List`);
                 }
                 const catchData = await catchResponse.json();
-                setCatches(catchData.listFish); // Předpokládá, že úlovky jsou v catchData.listFish
+                setCatches(catchData.listFish); 
 
                 // Načtení seznamu druhů ryb
                 const speciesResponse = await fetch('http://localhost:3333/species/List');
@@ -207,14 +196,14 @@ const Dashboard = () => {
         };
 
         fetchData();
-    }, []); // Prázdné pole závislostí znamená, že se spustí jen jednou po prvním renderu
+    }, []); 
 
     // Filtrování úlovků na základě vybraného druhu
     const filteredCatches = selectedSpeciesId === 'all'
         ? catches
         : catches.filter(catchItem => catchItem.speciesId === selectedSpeciesId);
 
-    // --- Podmíněné renderování na základě stavu načítání a chyb ---
+    // při čekání na server
     if (loading) {
         return <div>Načítám data...</div>;
     }
@@ -223,7 +212,6 @@ const Dashboard = () => {
         return <div>Chyba při načítání dat: {error.message}</div>;
     }
 
-    // --- Vlastní renderování komponenty Dashboard ---
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
@@ -240,7 +228,6 @@ const Dashboard = () => {
             <div className="footer-container">
                 <hr className="dashboard-line"></hr>
                 <div className="dashboard-summary-container">
-                    {/* Suma váhy a délky úlovků */}
                     <div className="dashboard-weight">&#8721; kg: {filteredCatches.reduce((sum, fish) => sum + fish.weight, 0).toFixed(2)}</div>
                     <div className="dashboard-length">&#8721; m: {(filteredCatches.reduce((sum, fish) => sum + fish.length, 0) / 100).toFixed(2)}</div>
                 </div>
@@ -250,32 +237,27 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Modální okno pro souhrnný výkaz */}
             {showSummaryModal && (
                 <Summary onClose={handleCloseSummaryModal} catches={catches} />
             )}
 
-            {/* Modální okno pro přidání nového úlovku */}
             {showAddFishModal && (
                 <ItemForm
                     onClose={hadleCloseAddFishModal}
-                    speciesList={speciesList.filter(species => species.id !== 'all')} // Bez "Všechny druhy"
-                    initialData={null} // Nepředáváme initialData pro nový úlovek
-                    onSubmit={handleSubmitCatch} // Funkce pro odeslání dat formuláře
+                    speciesList={speciesList.filter(species => species.id !== 'all')}
+                    initialData={null} 
+                    onSubmit={handleSubmitCatch} 
                 />
             )}
 
-            {/* Modální okno pro úpravu existujícího úlovku */}
-            {showEditFishModal && catchToEdit && ( // Zobrazí se, jen když je true a catchToEdit není null
+            {showEditFishModal && catchToEdit && (
                 <ItemForm
                     onClose={handleCloseEditFishModal}
-                    speciesList={speciesList.filter(species => species.id !== 'all')} // Bez "Všechny druhy"
-                    initialData={catchToEdit} // Předáváme data úlovku k editaci
-                    onSubmit={handleSubmitCatch} // Funkce pro odeslání dat formuláře
+                    speciesList={speciesList.filter(species => species.id !== 'all')}
+                    initialData={catchToEdit} 
+                    onSubmit={handleSubmitCatch} 
                 />
             )}
-
-            {/* Modální okno pro potvrzení smazání */}
             {showConfirmDeleteModal && (
                 <Modal show={true} onHide={handleCloseConfirmDeleteModal}>
                     <Modal.Header closeButton>
