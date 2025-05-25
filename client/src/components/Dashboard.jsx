@@ -5,7 +5,7 @@ import './Dashboard.css';
 import Summary from './Summary';
 import Button from 'react-bootstrap/esm/Button';
 import ItemForm from './ItemForm';
-import ConfirmDeleteModal from './ConfirmDeleteModal'; 
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 const Dashboard = () => {
     // Stavy pro filtraci a zobrazení dat
