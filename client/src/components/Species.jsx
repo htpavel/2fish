@@ -1,13 +1,12 @@
 /* komponenta pro přidávání, editaci a mazání druhů ryb */
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import './Species.css';
 import SpeciesForm from './SpeciesForm';
-
+import ConfirmDeleteModal from './ConfirmDeleteModal'; 
 
 const Species = () => {
-   const [speciesList, setSpeciesList] = useState([]);
+    const [speciesList, setSpeciesList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -207,22 +206,13 @@ const Species = () => {
                 />
             )}
 
-            {showConfirmDeleteModal && (
-                <Modal show={true} onHide={handleCloseConfirmDeleteModal}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Potvrzení smazání</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Opravdu chcete smazat tento druh ryby?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleCloseConfirmDeleteModal}>
-                            Zrušit
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteSpecies}>
-                            Smazat
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            )}
+            <ConfirmDeleteModal
+                show={showConfirmDeleteModal}
+                onClose={handleCloseConfirmDeleteModal}
+                onConfirm={handleDeleteSpecies}
+                title="Potvrzení smazání druhu"
+                message="Opravdu chcete smazat tento druh ryby? Tato akce smaže i všechny úlovky spojené s tímto druhem!"
+            />
         </div>
     );
 };

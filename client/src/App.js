@@ -11,7 +11,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ErrorPage from "./components/ErrorPage";
 import Layout from './components/Layout';
 import Dashboard from "./components/Dashboard";
-import Summary from "./components/Summary";
 import Species from "./components/Species";
 
 const App = () => {
